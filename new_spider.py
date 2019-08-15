@@ -1,7 +1,4 @@
-import requests
-import json
-import time
-import datetime
+
 from matplotlib import pyplot as plt
 
 
@@ -199,64 +196,43 @@ def FindDrawgon(index=0):
             break
     return data[0][1],countDaXiao,data[0][2],countDanShuang
 
+def getPicture():
+    """
+    画出大小单双分布图 并得到当前情况
+    :return:
+    """
+    drawFigureDaXiao(data)
+    drawFigureDaXiaoDanShuang(data)
+    print("当前期数开奖情况：",getCurrentQihao())
+
 if __name__=="__main__":
-    # while True:
-    #     # 35-40s结果肯定出来
-    #     tm = datetime.datetime.now().second
-    #     if 5 <= tm <= 10:
-    #         response = requests.get(url=url, headers=headers)
-    #         text = json.loads(response.text)
-    #         res = text['data'][0]  # 最近一期
-    #         print(res)
-    #         # print(res)
-    #         qihao = res['expect']  # 期号
-    #         opencodearr = res['opencodearr']
-    #         opencodearr = opencodearr.split(',')
-    #         if qihao not in dic:
-    #             dic[qihao] = res['opencode']
-    #         else:  # 可能未开奖
-    #             continue
-    #         if opencodearr[1] == "大":
-    #             flag1 += 1
-    #         else:
-    #             flag2 += 1
-    #         if opencodearr[2] == "单":
-    #             flag3 += 1
-    #         else:
-    #             flag4 += 1
-    #         end = time.time()
-    #         with open('recode.txt', 'a', encoding="utf-8") as f:
-    #             if int(res['expect'])%10==0:  #十期空行
-    #                 f.write("\n")
-    #             f.write(qihao + "\t" + res['opencode'] + "\t" + ",".join(opencodearr) + "\n")
-    #         print("当前形势为:期号:\033[1;45m{}\033[0m,大：\033[1;45m{}\033[0m,小：\033[1;45m{}\033[0m，"
-    #               "单：\033[1;45m{}\033[0m,双：\033[1;45m{}\033[0m".format(qihao, flag1, flag2, flag3, flag4))
-    #         time.sleep(55)
-    #     else:
-    #         time.sleep(1)
-
-
-
-    # for i in range(20,100000,10):
-    #     data=getAnylize(i)
-    #     digit, data=Recommend(data)
-    #     print("各数字出现次数:",digit)
-    #     print("大小单双分布情况:",data)
-    #
-    #     # while True:
-    #     #     if getHe(data):
-    #     #         with open('hezhi.txt','w') as f:
-    #     #             f.write()
-    #     drawFigureDaXiao(data)
-    #     drawFigureDaXiaoDanShuang(data)
-    #     print("当前期数开奖情况：",getCurrentQihao())
 
 
     # drawHeatMap()
     # drawHeatMapBySeaborn(1)
-    while True:
-        res1,daxiaoDra,res2,danshaungDra=FindDrawgon(10)
-        print(res1,daxiaoDra)
-        print(res2,danshaungDra)
-        time.sleep(30)
+
+
+    # while True:
+    #     res1,daxiaoDra,res2,danshaungDra=FindDrawgon(10)
+    #     print(res1,daxiaoDra)
+    #     print(res2,danshaungDra)
+    #     time.sleep(30)
+
+    count=0
+    notcount=0
+    data= getAnylize(100000)
+    digit, cmd = Recommend(data)
+    print("各数字出现次数:", digit)
+    print("大小单双分布情况:", cmd)
+    qihao,opencode,res= getOpenRes(data)
+    minval=9
+    maxval=14
+    for i in range(len(res)):
+        if minval<=int(res[i][0])<=maxval:
+            count+=1
+        else:
+            notcount+=1
+    print("范围内",count)
+    print("不在范围内",notcount)
+    print("百分比",float(count/(notcount+count)))
 
