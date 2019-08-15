@@ -81,7 +81,7 @@ def getHe(data):
         print('当期数为{}一致'.format(data['大']*2))
         return True
 
-def drawFigure(data):
+def drawFigureDaXiao(data):
     # 解决中文乱码
     plt.rcParams['font.sans-serif'] = ['SimHei']
     #调节图像大小 宽高
@@ -105,6 +105,100 @@ def drawFigure(data):
     plt.axis('equal')
     plt.legend()
     plt.show()
+
+
+def drawFigureDaXiaoDanShuang(data):
+    # 解决中文乱码
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    #调节图像大小 宽高
+    plt.figure(figsize=(3,3))
+    labels =[u'单',u'双']
+    plt.title("单双和值:"+str(data['单']+data['双']))
+    sizes = [data['单'],data['双']]
+    colors = ['red', 'yellowgreen']
+    explode = (0.05, 0)
+    patches, l_text, p_text = plt.pie(sizes, explode=explode, labels=labels, colors=colors,
+                                      labeldistance=1.1, autopct='%3.1f%%', shadow=False,
+                                      startangle=90, pctdistance=0.6)
+    # labeldistance，文本的位置离远点有多远，1.1指1.1倍半径的位置
+    # autopct，圆里面的文本格式，%3.1f%%表示小数有三位，整数有一位的浮点数
+    # shadow，饼是否有阴影
+    # startangle，起始角度，0，表示从0开始逆时针转，为第一块。一般选择从90度开始比较好看
+    # pctdistance，百分比的text离圆心的距离
+    # patches, l_texts, p_texts，为了得到饼图的返回值，p_texts饼图内部文本的，l_texts饼图外label的文本
+
+    #设置x y 轴一致
+    plt.axis('equal')
+    plt.legend()
+    plt.show()
+
+def drawHeatMap():
+    import random
+    from pyecharts import HeatMap
+
+    x_axis = [
+        "12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a",
+        "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"]
+    y_axis = [
+        "Saturday", "Friday", "Thursday", "Wednesday", "Tuesday", "Monday", "Sunday"]
+    data = [[i, j, random.randint(0, 50)] for i in range(24) for j in range(7)]
+    heatmap = HeatMap()
+    heatmap.add(
+        "热力图直角坐标系",
+        x_axis,
+        y_axis,
+        data,
+        is_visualmap=True,
+        visual_text_color="#000",
+        visual_orient="horizontal",
+    )
+    heatmap.render()
+
+def drawHeatMapBySeaborn(data):
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import numpy as np
+    a = np.random.uniform(0, 1, size=(10, 10))
+    sns.heatmap(a, cmap='Accent')
+    plt.show()
+
+def getOpenRes(data):
+    """
+    将 文件中数据拆分
+    :param data:
+    :return:
+    """
+    qihao=[]
+    opencode=[]
+    res=[]
+    for i in range(len(data)):
+        qihao.append(data[i][0])
+        opencode.append(data[i][1])
+        res.append(data[i][2].split(","))
+    return qihao,opencode,res
+
+
+def FindDrawgon(index=0):
+    """
+    查询最近几期连续的结果
+    :param index:
+    :return:
+    """
+    countDaXiao=1
+    countDanShuang=1
+    data = getAnylize(index)
+    #数据倒叙排序以便发现龙
+    print(data[::-1])
+    qihao,opencode,data = getOpenRes(data[::-1])  #data=[[12,大，单],[13，小，双]]
+    for i in range(1,len(data)-1):
+        if data[0][1]==data[i+1][1]:
+            countDaXiao+=1
+        if data[0][2]==data[i+1][2]:
+            countDanShuang+=1
+        else:
+            break
+    return data[0][1],countDaXiao,data[0][2],countDanShuang
+
 if __name__=="__main__":
     # while True:
     #     # 35-40s结果肯定出来
@@ -140,15 +234,29 @@ if __name__=="__main__":
     #         time.sleep(55)
     #     else:
     #         time.sleep(1)
-    for i in range(20,100000,10):
-        data=getAnylize(i)
-        digit, data=Recommend(data)
-        print("各数字出现次数:",digit)
-        print("大小单双分布情况:",data)
-        # while True:
-        #     if getHe(data):
-        #         with open('hezhi.txt','w') as f:
-        #             f.write()
-        drawFigure(data)
-        print("当前期数开奖情况：",getCurrentQihao())
+
+
+
+    # for i in range(20,100000,10):
+    #     data=getAnylize(i)
+    #     digit, data=Recommend(data)
+    #     print("各数字出现次数:",digit)
+    #     print("大小单双分布情况:",data)
+    #
+    #     # while True:
+    #     #     if getHe(data):
+    #     #         with open('hezhi.txt','w') as f:
+    #     #             f.write()
+    #     drawFigureDaXiao(data)
+    #     drawFigureDaXiaoDanShuang(data)
+    #     print("当前期数开奖情况：",getCurrentQihao())
+
+
+    # drawHeatMap()
+    # drawHeatMapBySeaborn(1)
+    while True:
+        res1,daxiaoDra,res2,danshaungDra=FindDrawgon(10)
+        print(res1,daxiaoDra)
+        print(res2,danshaungDra)
+        time.sleep(30)
 
