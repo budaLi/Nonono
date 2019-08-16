@@ -1,6 +1,6 @@
-
+import pandas as pd
+import numpy as np
 from matplotlib import pyplot as plt
-
 
 
 # 爬虫地址
@@ -196,7 +196,7 @@ def FindDrawgon(index=0):
             break
     return data[0][1],countDaXiao,data[0][2],countDanShuang
 
-def getPicture():
+def getPicture(data):
     """
     画出大小单双分布图 并得到当前情况
     :return:
@@ -205,8 +205,44 @@ def getPicture():
     drawFigureDaXiaoDanShuang(data)
     print("当前期数开奖情况：",getCurrentQihao())
 
-if __name__=="__main__":
+def getMinAndMaxRange(qishu,minval,maxval):
+    """
+    得到已有数据中指定范围内百分比占比
+    :param minval:
+    :param maxval:
+    :return:
+    """
+    count=0
+    notcount=0
+    data= getAnylize(qishu)
+    digit, cmd = Recommend(data)
+    print("各数字出现次数:", digit)
+    print("大小单双分布情况:", cmd)
+    qihao,opencode,res= getOpenRes(data)
+    for i in range(len(res)):
+        if minval<=int(res[i][0])<=maxval:
+            count+=1
+        else:
+            notcount+=1
+    print("范围为：%s - %s"%(minval,maxval))
+    print("范围内",count)
+    print("不在范围内",notcount)
+    print("百分比",float(count/(notcount+count)))
 
+def getDistribution(maxval,spcial=None):
+    """
+    :param maxval:
+    :param spcial:
+    :return:
+    """
+    mu,sigma =0,1 #正态分布中u = 0,sigma=1
+    data=np.random.randint(4,18,100)
+    plt.hist(data, bins=1000, normed=True)
+    plt.show()
+    return data
+import get_pre
+if __name__=="__main__":
+    # data= getDistribution(100)
 
     # drawHeatMap()
     # drawHeatMapBySeaborn(1)
@@ -218,21 +254,7 @@ if __name__=="__main__":
     #     print(res2,danshaungDra)
     #     time.sleep(30)
 
-    count=0
-    notcount=0
-    data= getAnylize(100000)
-    digit, cmd = Recommend(data)
-    print("各数字出现次数:", digit)
-    print("大小单双分布情况:", cmd)
-    qihao,opencode,res= getOpenRes(data)
-    minval=9
-    maxval=14
-    for i in range(len(res)):
-        if minval<=int(res[i][0])<=maxval:
-            count+=1
-        else:
-            notcount+=1
-    print("范围内",count)
-    print("不在范围内",notcount)
-    print("百分比",float(count/(notcount+count)))
+    # data=getMinAndMaxRange(10000,10,13)
+    now_prediction=get_pre.getPre()
+    print("当前预测",now_prediction)
 

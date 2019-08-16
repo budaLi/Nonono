@@ -1,4 +1,4 @@
-#获取计划的预测值饼判断计划的准确性 正确几率等
+#获取计划的预测值
 import time
 import requests
 import json
@@ -39,9 +39,35 @@ data2={
     'suffix': daXiao,
 }
 
-def main():
+def getPre():
+    """
+    返回预测期数与预测结果
+    :return:
+    """
+    count_res= 0
     data=requests.post(url=url,data=data1,json=True,headers=headers)
-    print(json.loads(data.text))
+    data=json.loads(data.text)
+
+    #预测结果中第一个正在预测 第二个为上次预测情况
+
+    now_prediction=data['data'][0]['prediction'] #当前预测结果
+    flag=True      #代表是否是最近几期预测情况
+
+    res = data['data'][1]['result']  #最近一期的预测对错
+    for one in data['data'][2:]:
+        if flag:
+            if one['result'] == res:
+                count_res+=1
+            else:
+                flag=False
+        break
+    print("老马狗连续预测 %s %s 期啦！赶紧决定！"%(res,count_res))
+    return now_prediction
+
 
 if __name__=="__main__":
-    main()
+    while 1:
+        #时间上存在问题 不同步
+        now_prediction=getPre()
+        print("当前预测",now_prediction)
+        time.sleep(50)
