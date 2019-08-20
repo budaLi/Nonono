@@ -44,7 +44,7 @@ def getPre():
     返回预测期数与预测结果
     :return:
     """
-    count_res= 0
+    count_res= 1
     data=requests.post(url=url,data=data1,json=True,headers=headers)
     data=json.loads(data.text)
 
