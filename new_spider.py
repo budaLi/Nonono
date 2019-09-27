@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
-
+import time
 # 爬虫地址
 url = 'http://9x906.com/api/game/k3OpenList?lotteryid=65'
 file_name="recode.txt"
@@ -131,7 +131,7 @@ def drawFigureDaXiaoDanShuang(data):
 
 def drawHeatMap():
     import random
-    from pyecharts import HeatMap
+    from pyecharts import charts
 
     x_axis = [
         "12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a",
@@ -240,8 +240,10 @@ def getDistribution(maxval,spcial=None):
     plt.hist(data, bins=1000, normed=True)
     plt.show()
     return data
-import get_pre
+
+
 if __name__=="__main__":
+    pass
     # data= getDistribution(100)
 
     # drawHeatMap()
@@ -254,7 +256,4 @@ if __name__=="__main__":
     #     print(res2,danshaungDra)
     #     time.sleep(30)
 
-    # data=getMinAndMaxRange(10000,10,13)
-    now_prediction=get_pre.getPre()
-    print("当前预测",now_prediction)
 
