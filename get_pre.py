@@ -110,16 +110,17 @@ if __name__=="__main__":
         if 5 <= tm <= 10:
             now_prediction,count_res=getPre()
             print("当前预测",now_prediction)
-            if count_res >= 4:
+            if count_res >= 6:
                 yes = input("是否进行投注?")
                 if yes=="y":
                     money = input("请输入投注金额")
                     res = xiaZhu(money)
                     print(res)
                 else:
-                    pass
+                    count_res=1
+                    continue
             else:
-                pass
+                continue
             time.sleep(55)
         else:
             time.sleep(1)

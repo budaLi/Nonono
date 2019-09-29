@@ -47,3 +47,4 @@ if __name__=="__main__":
     normSet= autoNorm(res)
 
     print(normSet)
+
